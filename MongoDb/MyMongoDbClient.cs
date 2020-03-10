@@ -24,8 +24,7 @@ namespace MongoDb
         internal void Insert()
         {
             var database = client.GetDatabase(databaseName);
-            //    var t = database.RunCommand(new ObjectCommand<string>(();
-            var bigDataCollection = database.GetCollection<Operation>(collectionName);
+            IMongoCollection<Operation> collection = database.GetCollection<Operation>(collectionName);
             var result = new List<Operation>(operationCount);
             for (int i = 0; i < operationCount; i++)
             {
@@ -73,7 +72,7 @@ namespace MongoDb
                 operation.OperationLocations = operationLocations;
                 result.Add(operation);
             }
-            bigDataCollection.InsertMany(result);
+            collection.InsertMany(result);
 
             Console.WriteLine($"insert {operationCount}*{operationLocationCount}*{operationDetailCount} = {operationCount * operationLocationCount * operationDetailCount}");
 
@@ -83,22 +82,24 @@ namespace MongoDb
         {
 
             var database = client.GetDatabase(databaseName);
-            var bigDataCollection = database.GetCollection<Operation>(collectionName);
+            IMongoCollection<Operation> collection = database.GetCollection<Operation>(collectionName);
 
             var keyC = Builders<Operation>.IndexKeys.Ascending("CreatedOn");
-            var keyO = Builders<Operation>.IndexKeys.Ascending("OperationState");
-            bigDataCollection.Indexes.CreateOne(new CreateIndexModel<Operation>(keyC));
-            bigDataCollection.Indexes.CreateOne(new CreateIndexModel<Operation>(keyO));
+            var keyOs = Builders<Operation>.IndexKeys.Ascending("OperationState");
+            var keyOt = Builders<Operation>.IndexKeys.Ascending("OperationType");
+            collection.Indexes.CreateOne(new CreateIndexModel<Operation>(keyC));
+            collection.Indexes.CreateOne(new CreateIndexModel<Operation>(keyOs));
+            collection.Indexes.CreateOne(new CreateIndexModel<Operation>(keyOt));
 
             var filter = Builders<OperationDetail>.Filter.Eq("Quantity", 2);
 
             Stopwatch sw = Stopwatch.StartNew();
-            var latestInventory = bigDataCollection
+            var latestInventory = collection
                 .Find<Operation>(d => d.OperationState == Beezie.Domain.Enums.OperationStates.Finalized && d.OperationType == Beezie.Domain.Enums.OperationTypes.Inventory)
                 .SortByDescending(o => o.CreatedOn)
                 .Limit(1).First();
 
-            var stock = bigDataCollection
+            var stock = collection
               .Find<Operation>(d => d.OperationState == Beezie.Domain.Enums.OperationStates.Finalized && latestInventory.CreatedOn <= d.CreatedOn)
               .ToList();
 
