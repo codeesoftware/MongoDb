@@ -26,6 +26,7 @@ namespace MongoDb.Entities
         [BsonElement(nameof(Comment))]
         public string Comment { get; set; }
 
+
         [BsonElement(nameof(OperationLocations))]
         public virtual ICollection<OperationLocation> OperationLocations { get; set; }
 

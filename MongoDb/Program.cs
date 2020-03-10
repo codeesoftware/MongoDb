@@ -14,7 +14,7 @@ namespace MongoDb
             try
             {
 
-         //   mdc.Insert();
+          // mdc.Insert();
 
                mdc.Query();
             }

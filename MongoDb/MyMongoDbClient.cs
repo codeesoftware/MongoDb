@@ -9,13 +9,13 @@ namespace MongoDb
 {
     class MyMongoDbClient
     {
-        private const int operationCount = 1000000;
+        private const int operationCount = 1000;
         private const int operationLocationCount = 1;
         private const int operationDetailCount = 20;
         private const string databaseName = "Poc";
         private const string collectionName = "Inventory";
         private readonly MongoClient client;
-        private readonly string mongoDBConnectionString = "mongodb+srv://admin:Fireflower20@cluster0-emlrs.mongodb.net/test?retryWrites=true&w=majority";
+        private readonly string mongoDBConnectionString = "mongodb+srv://admin:Fireflower20@cluster1-emlrs.mongodb.net/test?retryWrites=true&w=majority";
 
         public MyMongoDbClient()
         {
