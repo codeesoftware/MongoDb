@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Beezie.Domain" Version="1.0.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
   </ItemGroup>
 
 </Project>
